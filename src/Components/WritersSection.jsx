@@ -1,18 +1,14 @@
+import{Container, Row, Col} from 'react-grid-system';
+import { DynamicStar } from 'react-dynamic-star';
+import WindowDimension from './WindowDimension';
 import React,{useState, useEffect} from 'react';
-import colorScheme from '../Styling.js';
 import mainSvg from '../Images/WritersImg.svg';
 import Ellipse from '../Images/Ellipse 2.svg';
-import Edit from '../Images/EditPencil.svg';
-import WindowDimension from './WindowDimension';
-import {Link} from 'react-router-dom'
-// import Avatar from '../Images/avatar.jpg';
-// import WritersRating from '../Images/WritersRating.svg';
 import CardLine from '../Images/CardLine.svg';
-import { DynamicStar } from 'react-dynamic-star';
-// import WritersData from './WritersData.js';
-import{Container, Row, Col} from 'react-grid-system';
+import Edit from '../Images/EditPencil.svg';
 import { AsyncStorage } from 'AsyncStorage';
-import StaticToken from './StaticToken.js';
+import colorScheme from '../Styling.js';
+import {Link} from 'react-router-dom'
 import axios from 'axios';
 
 
@@ -37,23 +33,20 @@ const WritersSection = () => {
         }
       }
 
-      const gettingWriters = (token)=>{
-        axios.get(`http://easyeassy.develpify.com/writer/getwriters`,{
-          headers:{
-            Authorization:token
-          }
-        })
+      const gettingWriters = ()=>{
+        axios.get(`${process.env.REACT_APP_BASE_URL}fetchwriter`)
         .then((res)=>{
-            setWriters(res.data.data)
+            setWriters(res.data)
     
         })
         .catch((error)=>{
-          console.log(error);
+          return error
         })
       }
 
       useEffect(() => {
         SetLocalLogin()
+        gettingWriters()
       }, [])
       
   return (
@@ -110,7 +103,7 @@ const WritersSection = () => {
                             <div className="card-body">
                                 <div className={height<=850 && width<=500?"d-flex gap-5":"d-flex"}>
                                     <div className="col-lg-6">
-                                <img className="img-fluid p-1" src={items.avatar} alt="" style={{width:"5em",borderRadius:"4px",boxShadow:"0px 4px 4px #7367F0",border:"1px solid #7367F0"}} />
+                                <img className="img-fluid p-1" src={`${process.env.REACT_APP_IMG_URL}${items.avatar}`} alt="" style={{width:"5em",borderRadius:"4px",boxShadow:"0px 4px 4px #7367F0",border:"1px solid #7367F0"}} />
                                 </div>
                                 <div className="col-lg-6">
                                     <p className="mt-1"style={{fontSize:"18px",fontFamily:"Montserrat",fontWeight:"500",letterSpacing:"0.05em",color:"#0E101A"}}>{items.writer_name}</p>

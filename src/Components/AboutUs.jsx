@@ -22,6 +22,7 @@ import imgTen from '../Images/AboutUs/Edit/full-selection.svg';
 const AboutUs = () => {
   const { height, width } = WindowDimension();
 
+
   return (
     <>
       <section id="become-expert" className="about-us">

@@ -20,7 +20,6 @@ import AboutWriter from './Components/AboutWriter.jsx';
 
 import { AsyncStorage } from 'AsyncStorage';
 
-import baseURL from './Components/BaseURL';
 import axios from 'axios';
  
 function App() {
@@ -40,12 +39,12 @@ function App() {
   }
 
   const HomePageContent = ()=>{
-    axios.get(`${baseURL}fetchHomepage`)
+    axios.get(`${process.env.REACT_APP_BASE_URL }fetchHomepage`)
     .then((res)=>{
       setHomePage(res.data)
     })
     .catch((error)=>{
-      console.log(error);
+      return error;
     })
 
   }

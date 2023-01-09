@@ -3,10 +3,8 @@ import WindowDimension from './WindowDimension.jsx';
 import React,{useState, useEffect} from "react";
 import BlogListCate from './BlogListCate.js';
 import { AsyncStorage } from 'AsyncStorage';
-import baseImgURL from './baseURLImg.js'
 import {Link } from 'react-router-dom';
 import AdSense from 'react-adsense';
-import baseURL from './BaseURL.js';
 import Slider from "react-slick";
 import Data from './BlogData.js';
 import axios from 'axios';
@@ -14,13 +12,14 @@ import axios from 'axios';
 
 
 const BlogList = () => {
+  const { height, width } = WindowDimension();
   const[showLength, setShowLength] = useState(5);
   const[getBlogs, setGetBlogs] = useState([])
-  const { height, width } = WindowDimension();
   const dataLength = Data.length;
-const[isLike, setIsLike] = useState([]);
-const[disLike, setDisLike] = useState([]);
-const[token , setToken] = useState();
+  const[isLike, setIsLike] = useState([]);
+  const[disLike, setDisLike] = useState([]);
+  const[token , setToken] = useState();
+
   const SetLocalLogin= async ()=>{
     try{
       let userTOKEN = await AsyncStorage.getItem('token');
@@ -37,13 +36,13 @@ const[token , setToken] = useState();
   }
 
   const gettingBlogs = ()=>{
-    axios.get(`${baseURL}fetchblog`)
+    axios.get(`${process.env.REACT_APP_BASE_URL}fetchblog`)
     .then((res)=>{
       setGetBlogs(res.data)
 
     })
     .catch((error)=>{
-      console.log(error);
+      return error;
     })
   }
 
@@ -51,28 +50,28 @@ const likeFun = (id)=>{
   const ID = {
     blog_id:id
   }
-  axios.post(`${baseURL}like`,ID)
+  axios.post(`${process.env.REACT_APP_BASE_URL}like`,ID)
   .then((res)=>{
     setIsLike(res.data)
     SetLocalLogin()
 
   })
   .catch((error)=>{
-    console.log(error);
+    return error;
   })
 }
 const dikeFun = (id)=>{
 const ID = {
   blog_id:id
 }
-  axios.post(`${baseURL}dislike`,ID)
+  axios.post(`${process.env.REACT_APP_BASE_URL}dislike`,ID)
   .then((res)=>{
     setDisLike(res.data)
     SetLocalLogin()
 
   })
   .catch((error)=>{
-    console.log(error);
+    return error;
   })
 }
   const settings = {
@@ -130,12 +129,12 @@ const ID = {
       return(
             <Col lg={4} className="mt-3" > 
             <div className="card blog-card h-100 w-100">
-              <img src={`${baseImgURL}${items.image}`} className="card-img-top" alt="blog-image" width={50} height={200}/>
+              <img src={`${process.env.REACT_APP_IMG_URL}${items.image}`} className="card-img-top" alt="blog-image" width={50} height={200}/>
               <div className="card-body">
                 <h5 className="card-title">{items.title}</h5>
                 <div className="d-flex">
                   <div className="avatar me-50">
-                    <img src={`${baseImgURL}${items.auther_image}`} className="img-fluid" alt="Avatar" width={24} height={24} />
+                    <img src={`${process.env.REACT_APP_IMG_URL}${items.auther_image}`} className="img-fluid" alt="Avatar" width={24} height={24} />
                   </div>
                   <div className="author-info">
                     <small className="text-muted me-25">by</small>

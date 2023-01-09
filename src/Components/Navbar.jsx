@@ -5,7 +5,6 @@ import WindowDimension from './WindowDimension';
 import { Link } from "react-router-dom";
 import { AsyncStorage } from 'AsyncStorage';
 import axios from 'axios';
-import baseURL from './BaseURL.js'
 
 
 
@@ -33,30 +32,30 @@ const Navbar = ({
   }
 
   const gettingTopServices = ()=>{
-    axios.get(`${baseURL}fetchTopservice`)
+    axios.get(`${process.env.REACT_APP_BASE_URL}fetchTopservice`)
     .then((res)=>{
       setTopServices(res.data)
 
     })
     .catch((error)=>{
-      console.log(error);
+      return error;
     })
   }
   const gettingTopOffers = ()=>{
-    axios.get(`${baseURL}fetchTopoffer`)
+    axios.get(`${process.env.REACT_APP_BASE_URL}fetchTopoffer`)
     .then((res)=>{
       setTopOffers(res.data)
 
     })
     .catch((error)=>{
-      console.log(error);
+      return error;
     })
   }
 
 
   useEffect(() => {
-  SetLocalLogin();
   gettingTopServices();
+  gettingTopOffers();
   }, [])
   
 

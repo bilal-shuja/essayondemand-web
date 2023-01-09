@@ -8,7 +8,6 @@ import WindowDimension from './WindowDimension';
 import { AsyncStorage } from 'AsyncStorage';
 import{Container, Row, Col} from 'react-grid-system';
 import axios from 'axios';
-import StaticToken from './StaticToken.js';
 import baseURL from './BaseURL.js';
 
 
@@ -32,13 +31,12 @@ const EssayWritingExp = () => {
   }
 
   const gettingPageFaqs = ()=>{
-    axios.get(`${baseURL}fetchPagefaq`)
+    axios.get(`${process.env.REACT_APP_BASE_URL}fetchPagefaq`)
     .then((res)=>{
       setPageFaqs(res.data)
-
     })
     .catch((error)=>{
-      console.log(error);
+      return error;
     })
   }
   useEffect(() => {

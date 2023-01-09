@@ -1,13 +1,11 @@
+import{Container, Row, Col} from 'react-grid-system';
+import {Link , useLocation} from 'react-router-dom';
 import React,{useState , useEffect} from 'react';
+import { DynamicStar } from 'react-dynamic-star';
 import WindowDimension from './WindowDimension';
 import CardLine from '../Images/CardLine.svg';
-import Avatar from '../Images/avatar.jpg';
-import { DynamicStar } from 'react-dynamic-star';
-import {Link , useLocation} from 'react-router-dom';
-import{Container, Row, Col} from 'react-grid-system';
 import { AsyncStorage } from 'AsyncStorage';
 import axios from 'axios';
-import StaticToken from './StaticToken.js';
 
 const AboutWriter = () => {
     const { height, width } = WindowDimension();
@@ -18,6 +16,7 @@ const AboutWriter = () => {
     const Location = useLocation();
     const{id} = Location.state;
     const ID = id;
+
     const SetLocalLogin= async ()=>{
         try{
           let userTOKEN = await AsyncStorage.getItem('token');
@@ -33,71 +32,59 @@ const AboutWriter = () => {
             return null;
         }
       }
-      const gettingWriters = (token)=>{
-        axios.get(`http://easyeassy.develpify.com/writer/getwriters`,{
-          headers:{
-            Authorization:token
-          }
-        })
+      const gettingWriters = ()=>{
+        axios.get(`${process.env.REACT_APP_BASE_URL}fetchwriter`)
         .then((res)=>{
-            setWriters(res.data.data)
-    
+            setWriters(res.data)
+            
         })
         .catch((error)=>{
-          console.log(error);
+            return error;
         })
       }
-      const gettingContent = (token)=>{
-        axios.get(`http://easyeassy.develpify.com/writercontent/getwritercontent`,{
-          headers:{
-            Authorization:token
-          }
-        })
+      const gettingContent = ()=>{
+        axios.get(`${process.env.REACT_APP_BASE_URL}fetchwritercontent`)
         .then((res)=>{
-            setContent(res.data.data)
+            setContent(res.data)
+
     
         })
         .catch((error)=>{
-          console.log(error);
+            return error;
         })
       }
 
-      const gettingCustomerReview = (token)=>{
-          const writerID = {
-            writer_id:ID
-          }
-        axios.post(`http://easyeassy.develpify.com/writerdummy/getwriterdummyreviews`,writerID,{
-          headers:{
-            Authorization:token
-          }
-        })
+      const gettingCustomerReview = ()=>{
+       
+        axios.get(`${process.env.REACT_APP_BASE_URL}fetchwriterdummyreviews`)
         .then((res)=>{
-            setCustomReview(res.data.data)
+            setCustomReview(res.data)
     
         })
         .catch((error)=>{
-          console.log(error);
+            return error
         })
       }
 
 
       useEffect(() => {
         SetLocalLogin()
+        gettingWriters()
+        gettingContent()
+        gettingCustomerReview()
       }, [])
   return (
     <>
-    <section id="about-writer" style={{marginTop:"6em"}}>
-    <h5 className="mb-5 ms-4">About Writers <div className="vr" style={{marginBottom:"-0.2em"}}></div> <span style={{fontSize:"20px"}}> <Link to="/">Home</Link>  </span> <span style={{fontSize:"18px", marginBottom:"-1.5em"}}> / </span>  <span style={{fontSize:"20px"}}><Link to="/Writers">Writer&nbsp; {ID}</Link></span></h5> 
-    {
+        <section id="about-writer" style={{marginTop:"6em"}}>
+        <h5 className="mb-5 ms-4">About Writers <div className="vr" style={{marginBottom:"-0.2em"}}></div> <span style={{fontSize:"20px"}}> <Link to="/">Home</Link>  </span> <span style={{fontSize:"18px", marginBottom:"-1.5em"}}> / </span>  <span style={{fontSize:"20px"}}><Link to="/Writers">Writer #&nbsp;{ID}</Link></span></h5> 
+        {
         getWriters.filter((item)=> item.id === ID).map((items)=>{
             return(
-<h1 className="ms-5" style={{color:"#0e101a",lineHeight:"3",fontFamily:"Roboto,sans-serif",fontWeight:"600"}}>{items.writer_name}</h1>
-)
-})    
-    }
+            <h1 className="ms-5" style={{color:"#0e101a",lineHeight:"3",fontFamily:"Roboto,sans-serif",fontWeight:"600"}}>{items.writer_name}</h1>
+            )
+            })    
+        }
     
-
-        {/* <div className="container"> */}
         <Container>
             <Row>
                 {
@@ -107,7 +94,7 @@ const AboutWriter = () => {
                             <div className="position-sticky">
                             <div className="card p-3" style={{borderRadius:"20px",border:"1px solid #c8d9ee",boxShadow:"0 0 16px 2px rgb(54 127 211 / 18%)"}}>
                                 <div className="writer-img">
-                                    <img className="img-fluid mx-auto d-block p-1" src={items.avatar} alt="" width={90} style={{borderRadius:"50%",border:"1px solid #eeeeee"}}/>
+                                    <img className="img-fluid mx-auto d-block p-1" src={`${process.env.REACT_APP_IMG_URL}${items.avatar}`} alt="" width={90} style={{borderRadius:"50%",border:"1px solid #eeeeee"}}/>
                                 </div>
         
                                 <div className="writer-info">
@@ -141,7 +128,8 @@ const AboutWriter = () => {
                         <div className="card p-4" style={{borderRadius:"10px",backgroundColor:"#f5f9ff", borderLeft:"8px solid #367fd3"}}>
                         <Row className="row p-3">
                             {
-                                getContent.filter((items)=> items.writer_id === ID).map((items)=>{
+                                // .filter((items)=> items.writer_id === ID)
+                                getContent.map((items)=>{
                                     return(
                                         <div  className="mb-5 col-lg-4">
                                         <div className="subject-info d-flex justify-content-between" style={{color:"0e101a"}}>
@@ -164,7 +152,6 @@ const AboutWriter = () => {
                            
                         </Row>
                     </div>
-                        {/* card-end */}
                         </Container>
                     
                     </div>
@@ -177,7 +164,8 @@ const AboutWriter = () => {
                         <div className="card p-4" style={{borderRadius:"10px",backgroundColor:"#f5f9ff", borderLeft:"8px solid #367fd3"}}>
                         <Row className="row p-3">
                             {
-                                 getContent.filter((items)=> items.writer_id === ID).map((items)=>{
+                                // .filter((items)=> items.writer_id === ID)
+                                 getContent.map((items)=>{
                                      return(
                                         <div className="mb-5 col-lg-4">
                                         <div className="subject-info d-flex justify-content-between" style={{color:"0e101a"}}>
@@ -213,10 +201,10 @@ const AboutWriter = () => {
                     )
                     })            
                     }
-
+                        {/* .filter((items)=> items.writer_id === ID) */}
                     <Row>
                         {
-                            getCustomReview.filter((items)=> items.writer_id === ID).map((items)=>{
+                            getCustomReview.map((items)=>{
                                 return(
                                     <Col lg={6} className="mt-3">
                                     <div className="card " style={{
@@ -260,7 +248,6 @@ const AboutWriter = () => {
         </Container>
 
 
-        {/* </div> */}
     </section>
     </>
   )

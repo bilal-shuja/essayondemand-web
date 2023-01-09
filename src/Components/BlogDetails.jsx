@@ -2,9 +2,7 @@ import {Link, useLocation  } from 'react-router-dom';
 import{Container, Row, Col} from 'react-grid-system';
 import React,{useState, useEffect} from 'react';
 import { AsyncStorage } from 'AsyncStorage';
-import imgBaseURL from './baseURLImg.js';
 import AdSense from 'react-adsense';
-import baseURL from './BaseURL.js';
 import axios from 'axios';
 
 
@@ -30,13 +28,14 @@ const BlogDetails = (props) => {
 
   
   const gettingBlogs = ()=>{
-    axios.get(`${baseURL}fetchblog`)
+    axios.get(`${process.env.REACT_APP_BASE_URL}fetchblog`)
     .then((res)=>{
       setGetBlogs(res.data)
 
     })
     .catch((error)=>{
-      console.log(error);
+      return error;
+
     })
   }
 
@@ -47,7 +46,7 @@ const BlogDetails = (props) => {
   
 
   return (
-    <div   style={{marginTop:"7em"}}>
+    <div   style={{margin:"7em 0 7em 0"}}>
        <Container>
           <Row>
       {
@@ -57,12 +56,12 @@ const BlogDetails = (props) => {
             <Col lg={12}>
             <h3 className="mt-5">Blog Details <div className="vr" style={{marginBottom:"-0.2em"}}></div> <span style={{fontSize:"20px"}}> <Link to="/">Home</Link>  </span> <span style={{fontSize:"18px", marginBottom:"-1.5em"}}> > </span>  <span style={{fontSize:"20px"}}><Link to="/blogs">Blogs</Link></span></h3> 
             <div className="card blog-card">
-            <img src={`${imgBaseURL}${items.image}`} className="card-img-top img-fluid" alt="..." style={{height:"20em"}}/>
+            <img src={`${process.env.REACT_APP_IMG_URL}${items.image}`} className="card-img-top img-fluid" alt="..." style={{height:"20em"}}/>
             <div className="card-body">
                 <h5 className="card-title" style={{  color:"#5e5873",fontWeight:"600"}}>{items.title}</h5>
                 <div className="d-flex">
                   <div className="avatar me-50">
-                    <img src={`${imgBaseURL}${items.auther_image}`}  className="img-fluid" alt="Avatar" width={24} height={24} />
+                    <img src={`${process.env.REACT_APP_IMG_URL}${items.auther_image}`}  className="img-fluid" alt="Avatar" width={24} height={24} />
                   </div>
                   <div className="author-info">
                     <small className="text-muted me-25">by</small>
@@ -79,7 +78,7 @@ const BlogDetails = (props) => {
                   <span className="badge rounded-pill badge-light-primary">{items.CateTwo}</span>
                 </a> */}
             </div>
-            <p className="card-text blog-content-truncate-two mb-2" style={{color:"#5e5873",opacity:"0.7"}} dangerouslySetInnerHTML={ { __html: items.content } }>
+            <p className="card-text text-bold mb-2" style={{color:"black"}} dangerouslySetInnerHTML={ { __html: items.content } }>
            {/* {items.content} */}
             </p>
             

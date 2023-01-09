@@ -3,11 +3,7 @@ import React,{useState , useEffect} from 'react';
 import { AsyncStorage } from 'AsyncStorage';
 import{Accordion} from 'react-bootstrap';
 import colorScheme from '../Styling.js';
-import baseURL from './BaseURL.js';
 import axios from 'axios';
-// import faqGirl from '../Images/faq-illustrations.svg';
-// import WindowDimension from './WindowDimension.jsx';
-
 
 
 const FreqAskQuestions = () => {
@@ -27,13 +23,13 @@ const FreqAskQuestions = () => {
         }
       }
       const gettingFaqs = ()=>{
-        axios.get(`${baseURL}fetchFaqweb`)
+        axios.get(`${process.env.REACT_APP_BASE_URL}fetchFaqweb`)
         .then((res)=>{
             setFaqs(res.data)
     
         })
         .catch((error)=>{
-          console.log(error);
+          return error;
         })
       }
       useEffect(() => {
